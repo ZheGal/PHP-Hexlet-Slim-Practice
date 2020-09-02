@@ -26,7 +26,7 @@ $app->get('/users', function ($request, $response) use ($users) {
         $find = [];
         foreach ($users as $user) {
             if (strpos($user, $search) !== false) {
-                $find[] = $user;
+                $find[] = htmlspecialchars($user);
             }
         }
         $params = ['users' => $find];
@@ -35,9 +35,6 @@ $app->get('/users', function ($request, $response) use ($users) {
 });
 $app->get('/users/{id}', function ($request, $response, $args) {
     $params = ['id' => $args['id'], 'nickname' => 'user-' . $args['id']];
-    // Указанный путь считается относительно базовой директории для шаблонов, заданной на этапе конфигурации
-    // $this доступен внутри анонимной функции благодаря https://php.net/manual/ru/closure.bindto.php
-    // $this в Slim это контейнер зависимостей
     return $this->get('renderer')->render($response, 'users/show.phtml', $params);
 });
 $app->post('/users', function ($request, $response) {
